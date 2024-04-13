@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>InnoPhyzio Registration Form</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <div class="title"><strong style="color: #fff;">Inno<span style="color: #28a745;">Phyzio</span> Registration Form</strong></div>
+        <div class="content">
+            <form action="/" method="post" id="physio_form">
+                <div class="user-details">
+                    <div class="input-box">
+                        <span class="details">First Name</span>
+                        <input type="text" id="first_name" name="first_name" required>
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Middle Name</span>
+                        <input type="text" id="middle_name" name="middle_name">
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Last Name</span>
+                        <input type="text" id="last_name" name="last_name" required>
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Date of Birth</span>
+                        <input type="date" id="birth_date" name="birth_date" onchange="calculateAge(this.value)" required>
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Gender</span>
+                        <select id="gender" name="gender" required>
+                            <option value="" disabled selected>Please Select</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Mobile Number</span>
+                        <input type="tel" id="mobile" name="mobile" required>
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Email</span>
+                        <input type="email" id="email" name="email" placeholder="example@example.com" required>
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Address</span>
+                        <input type="text" id="address" name="address" required>
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Pincode</span>
+                        <input type="text" id="pincode" name="pincode" required>
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Aadhar Number</span>
+                        <input type="text" id="aadhar_number" name="aadhar_number" required>
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Present Condition</span>
+                        <input type="text" id="present_condition" name="present_condition" required>
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Age</span>
+                        <input type="text" id="age" name="age" readonly>
+                    </div>
+                </div>
+                <div class="button">
+                    <input type="submit" value="Submit Application">
+                    <input type="reset" value="Clear Fields">
+                </div>
+            </form>
+            <div class="success-message" id="successMessage" style="display: none;">
+                <!-- Success message will be displayed here -->
+                <i class="fas fa-check-circle" style="color: #28a745; font-size: 48px;"></i><br>
+                <span style="font-size: 24px;">Patient data saved successfully!</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('physio_form');
+            const birthDateInput = document.getElementById('birth_date');
+            const ageInput = document.getElementById('age');
+
+            birthDateInput.addEventListener('change', function () {
+                const birthDate = new Date(this.value);
+                const today = new Date();
+                let age = today.getFullYear() - birthDate.getFullYear();
+                const monthDiff = today.getMonth() - birthDate.getMonth();
+                if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                    age--;
+                }
+                ageInput.value = age;
+            });
+
+            form.addEventListener('submit', function (event) {
+                event.preventDefault();
+                const formData = new FormData(form);
+                
+                fetch('/', {
+                    method: 'POST',
+                    body: formData,
+                })
+                .then(response => {
+                    if (response.ok) {
+                        const successMessage = document.getElementById('successMessage');
+                        successMessage.style.display = 'block';
+                        setTimeout(() => {
+                            successMessage.style.display = 'none';
+                        }, 3000);
+                    } else {
+                        alert('Error: ' + response.statusText);
+                    }
+                })
+                .catch(error => console.error(error));
+            });
+        });
+    </script>
+</body>
+
+</html>
